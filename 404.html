@@ -22,7 +22,7 @@
                 text-shadow: none;
 
                 background-color: #000000;/*black*/
-                /*overflow: auto;/*do not show a scrollbar*/
+                overflow: hidden;/*do not show a scrollbar*/
             }
             a, a:visited, a:active, a:hover {
                 color: #7db904;/*green*/
@@ -35,8 +35,24 @@
             a:hover {
                 cursor: pointer;
             }
-            .alink {
+            .nightsky, .foreground {
+                position: fixed;
+                top: 0; right: 0; bottom: 0; left: 0;
+            }
+            .black-hole {
                 margin: 100px 0 0 50px;
+                background-color: black;
+                border-radius: 50%;
+                width: 15em;
+                height: 15em;
+                display: table;
+            }
+            .content {
+                height: 100%;
+                width: 100%;
+                vertical-align: middle;
+                text-align: center;
+                display: table-cell;
             }
         </style>
 
@@ -57,8 +73,70 @@
         <link rel="mask-icon" href="https://null.place/safari-pinned-tab.svg" color="#000000"/>
     </head>
     <body>
-        <div class="alink">
-            <a href="https://analysis.null.place">analysis (blog)</a>
+        <div class="nightsky">
+            <svg version="1.1" baseProfile="basic" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 3000 3000">
+            <style type="text/css"><![CDATA[
+                .star {
+                    animation: twinkle 3s infinite linear;
+                }
+                @keyframes twinkle {
+                    0% { fill: #ffffff; }
+                    50% { fill: #add8e6;/*light blue*/ }
+                    100% { fill: #ffffff; }
+                }
+            ]]></style>
+                <defs>
+                    <g class="star">
+                        <polygon
+                            points="0,0
+                            3,24 10,20 6,27 30,30
+                            6,33 10,40 3,36 0,60
+                            -3,36 -10,40 -6,33 -30,30
+                            -6,27 -10,20 -3,24"
+                            transform="scale(0.5) translate(0,-30)"
+                        />
+                    </g>
+                </defs>
+            </svg>
         </div>
+        <div class="foreground">
+            <div class="black-hole">
+                <div class="content">
+                    <div class="alink">
+                        <a href="https://analysis.null.place">analysis (blog)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+var pageWidth = (
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+);
+var pageHeight = (
+    window.innerHeight ||
+    document.documentElement.clientHeight ||
+    document.body.clientHeight
+);
+var svg = document.getElementsByTagName('svg')[0];
+var svgDefs = svg.getElementsByTagName('defs')[0];
+var maxX = 3000; // same as viewBox width
+var maxY = 3000 * pageHeight / pageWidth;
+var i = 0;
+var intervalId = setInterval(function() {
+    var star = svgDefs.getElementsByClassName('star')[0].cloneNode(true);
+    var scaleStar = Math.random();
+    var x = maxX * Math.random();
+    var y = maxY * Math.random();
+    star.setAttribute(
+        'transform',
+        'translate(' + x + ',' + y + ') scale(' + scaleStar + ')'
+    );
+    svg.appendChild(star);
+    if (i++ > 5000) clearInterval(intervalId);
+}, 1);
+        </script>
     </body>
 </html>
