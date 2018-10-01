@@ -44,7 +44,7 @@
                 height: 100%;
             }
             .black-hole {/*a black circle*/
-                background-color: black;
+                background-color: #000000;/*black*/
                 border-radius: 50%;
                 width: 15em;
                 height: 15em;
@@ -52,6 +52,7 @@
                 position: absolute;
                 top: 0; right: 0; bottom: 0; left: 0;
                 margin: auto;
+                box-shadow: 0px 0px 50px 0px #ffffff;/*white*/
             }
             .content {/*vertically and horizontally center the text*/
                 height: 100%;
@@ -86,9 +87,9 @@
                     animation: twinkle 3s infinite linear;
                 }
                 @keyframes twinkle {
-                    0% { fill: #ffffff; }
-                    50% { fill: #add8e6;/*light blue*/ }
-                    100% { fill: #ffffff; }
+                    0% { fill: #ffffff;/*white*/ }
+                    50% { fill: #add8e6;/*lightblue*/ }
+                    100% { fill: #ffffff;/*white*/ }
                 }
             ]]></style>
                 <defs>
