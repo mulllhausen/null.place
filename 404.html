@@ -156,16 +156,9 @@ var intervalId = setInterval(function() {
     if (i++ > 4000) clearInterval(intervalId);
 }, 1);
 
-// delete all service workers and reload the page if any were found
+// register service worker so this page works offline
 if ('serviceWorker' in navigator) {
-    var anyFound = false;
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (let registration of registrations) {
-            registration.unregister();
-            anyFound = true;
-        }
-    });
-    if (anyFound) window.location.href = 'https://null.place';
+    navigator.serviceWorker.register('/sw.js');
 }
         </script>
     </body>
