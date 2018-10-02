@@ -1,12 +1,11 @@
-var latestCache = 'v1';
+var latestCache = '2018-10-03_08:15:55';
 self.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open(latestCache).then(function (cache) {
             return cache.addAll([
                 // there is only 1 page in this site
-                'https://null.place',
                 'https://null.place/',
-                'https://null.place/index.html' // = 404.html in the back end
+                'https://null.place/index.html'
             ]);
         })
     );
