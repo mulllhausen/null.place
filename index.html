@@ -35,6 +35,12 @@
             a:hover {
                 cursor: pointer;
             }
+            ::selection {/*highlight color*/
+                background: #000000;/*black*/
+            }
+            ::-moz-selection {/*highlight color*/
+                background: #000000;/*black*/
+            }
             .nightsky {
                 position: fixed;
                 top: 0; right: 0; bottom: 0; left: 0;
@@ -155,12 +161,21 @@ function add1Star() {
     );
     svg.appendChild(star);
 }
+if (window.addEventListener) {
+    window.addEventListener('load', addRemainingStars, false);
+} else if (window.attachEvent) { // ie
+    window.attachEvent('onload', addRemainingStars);
+} else {
+    window['onload'] = addRemainingStars;
+}
 var i = 0; // global
-var intervalId = setInterval(function() {
-    add1Star();
-    if (i++ > 4000) clearInterval(intervalId);
-}, 1);
-
+var intervalId = null; // global
+function addRemainingStars() {
+    intervalId = setInterval(function() {
+        add1Star();
+        if (i++ > 4000) clearInterval(intervalId);
+    }, 1);
+}
 // register service worker so this page works offline
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js');
