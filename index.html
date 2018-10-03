@@ -13,7 +13,7 @@
                 max-width: 100%;
 
                 font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-                font-size: 16px;
+                font-size: 20px;
                 -webkit-text-size-adjust: 100%;
                 -ms-text-size-adjust: 100%;
                 -moz-text-size-adjust: 100%;
@@ -58,8 +58,8 @@
             .black-hole {/*a black circle*/
                 background-color: #000000;/*black*/
                 border-radius: 50%;
-                width: 15em;
-                height: 15em;
+                width: 12em;
+                height: 12em;
                 display: table;
                 margin: auto;
                 box-shadow: 0px 0px 50px 0px #ffffff;/*white*/
@@ -73,7 +73,7 @@
             }
         </style>
 
-        <meta name="viewport" content="width=device-width, height=device-height initial-scale=1.0, user-scalable=no"/>
+        <meta name="viewport" content="width=device-width, height=device-height initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta name="description" content="null"/>
         <meta name="author" content="Peter Miller"/>
         <meta name="apple-mobile-web-app-title" content="null"/>
@@ -170,11 +170,15 @@ if (window.addEventListener) {
 }
 var i = 0; // global
 var intervalId = null; // global
+var numRemaining = 4000; // add 4000 more stars
+var interval = 400; // ms
+var numPerInterval = 1; // 1 gives a nice twinkling effect
+var numIntervals = numRemaining / numPerInterval;
 function addRemainingStars() {
     intervalId = setInterval(function() {
-        add1Star();
-        if (i++ > 4000) clearInterval(intervalId);
-    }, 1);
+        for (var j = 0; j < numPerInterval; j++) add1Star();
+        if (i++ > numIntervals) clearInterval(intervalId);
+    }, interval);
 }
 // register service worker so this page works offline
 if ('serviceWorker' in navigator) {
