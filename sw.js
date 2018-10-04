@@ -1,14 +1,37 @@
-var latestCache = '2018-10-04_08:50';
+var latestCache = '2018-10-05_08:25';
+var rootDomain = 'https://null.place/';
+var allAssets = [
+    // there is only 1 page in this site
+    '',
+    'index.html',
+
+    // icons
+    'android-chrome-192x192.png',
+    'android-chrome-256x256.png',
+    'android-chrome-512x512.png',
+    'apple-touch-icon.png',
+    'favicon-16x16.png',
+    'favicon-32x32.png',
+    'favicon.ico',
+    'mstile-144x144.png',
+    'mstile-150x150.png',
+    'mstile-310x150.png',
+    'mstile-310x310.png',
+    'mstile-70x70.png',
+    'safari-pinned-tab.svg',
+
+    // configs
+    'manifest.json',
+    'browserconfig.xml'
+];
+// prepend root domain to all assets
+for (var i = 0; i < allAssets.length; i++) {
+    allAssets[i] = rootDomain + allAssets[i];
+}
 self.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open(latestCache).then(function (cache) {
-            return cache.addAll([
-                // there is only 1 page in this site
-                'https://null.place/',
-                'https://null.place/index.html',
-
-                'https://null.place/manifest.json'
-            ]);
+            return cache.addAll(allAssets);
         })
     );
 });
@@ -24,6 +47,13 @@ self.addEventListener('activate', function (event) {
 });
 
 self.addEventListener('fetch', function (event) {
+
+    // 404 = show the index page
+    if (!allAssets.includes(event.request.url)) {
+        event.respondWith(caches.match('https://null.place/index.html'));
+        return;
+    }
+
     // all requests return the index page
-    event.respondWith(caches.match('https://null.place/index.html'));
+    event.respondWith(caches.match(event.request));
 });
