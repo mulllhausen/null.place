@@ -1,4 +1,4 @@
-var latestCache = '2018-10-05_08:30';
+var latestCache = '2019-04-16_23:48';
 var rootDomain = 'https://null.place/';
 var allAssets = [
     // there is only 1 page in this site
@@ -22,7 +22,8 @@ var allAssets = [
 
     // configs
     'manifest.json',
-    'browserconfig.xml'
+    'browserconfig.xml',
+    'sitemap.xml'
 ];
 // prepend root domain to all assets
 for (var i = 0; i < allAssets.length; i++) {
@@ -48,7 +49,7 @@ self.addEventListener('activate', function (event) {
 
 self.addEventListener('fetch', function (event) {
 
-    // 404 = show the index page
+    // 200 = show the index page
     if (!allAssets.includes(event.request.url)) {
         event.respondWith(caches.match(rootDomain));
         return;
