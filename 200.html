@@ -3,7 +3,77 @@
     <head>
         <meta charset="utf-8"/>
         <title>null</title>
-        <meta name="viewport" content="width=device-width, height=device-height initial-scale=1.0, user-scalable=no"/>
+        <style>
+            html, body{
+                margin: 0;
+                padding: 0;
+
+                min-width: 100%;
+                width: 100%;
+                max-width: 100%;
+
+                font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+                font-size: 20px;
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+                -moz-text-size-adjust: 100%;
+                color: #bbbbbb;/*off-white*/
+                text-decoration: none;
+                text-shadow: none;
+
+                background-color: #000000;/*black*/
+                overflow: hidden;/*do not show a scrollbar*/
+            }
+            a, a:visited, a:active, a:hover {
+                color: #7db904;/*green*/
+                text-decoration: none;
+                text-shadow: none;
+                margin: 0;
+                padding: 0;
+                border: 0;
+            }
+            a:hover {
+                cursor: pointer;
+            }
+            ::selection {/*highlight color*/
+                background: #000000;/*black*/
+            }
+            ::-moz-selection {/*highlight color*/
+                background: #000000;/*black*/
+            }
+            .nightsky {
+                position: fixed;
+                top: 0; right: 0; bottom: 0; left: 0;
+            }
+            .foreground, svg {
+                display: table;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+            }
+            .vertical-centre {
+                display: table-cell;
+                vertical-align: middle;
+            }
+            .black-hole {/*a black circle*/
+                background-color: #000000;/*black*/
+                border-radius: 50%;
+                width: 12em;
+                height: 12em;
+                display: table;
+                margin: auto;
+                box-shadow: 0px 0px 50px 0px #ffffff;/*white*/
+            }
+            .content {/*vertically and horizontally center the text*/
+                height: 100%;
+                width: 100%;
+                vertical-align: middle;
+                text-align: center;
+                display: table-cell;
+            }
+        </style>
+
+        <meta name="viewport" content="width=device-width, height=device-height initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta name="description" content="null"/>
         <meta name="author" content="Peter Miller"/>
         <meta name="apple-mobile-web-app-title" content="null"/>
@@ -20,13 +90,100 @@
         <link rel="apple-touch-icon" sizes="180x180" href="https://null.place/apple-touch-icon.png"/>
         <link rel="icon" type="image/png" sizes="32x32" href="https://null.place/favicon-32x32.png"/>
         <link rel="icon" type="image/png" sizes="16x16" href="https://null.place/favicon-16x16.png"/>
+        <link rel="manifest" href="https://null.place/manifest.json"/>
+        <link rel="mask-icon" href="https://null.place/safari-pinned-tab.svg" color="#000000"/>
     </head>
     <body>
+        <div class="nightsky">
+            <svg xmlns="http://www.w3.org/2000/svg">
+            <style type="text/css"><![CDATA[
+                .star {
+                    animation: twinkle 3s infinite linear;
+                }
+                @keyframes twinkle {
+                    0% { fill: #ffffff;/*white*/ }
+                    50% { fill: #add8e6;/*lightblue*/ }
+                    100% { fill: #ffffff;/*white*/ }
+                }
+            ]]></style>
+                <defs>
+                    <g class="star">
+                        <polygon
+                            points="0,0
+                            3,24 10,20 6,27 30,30
+                            6,33 10,40 3,36 0,60
+                            -3,36 -10,40 -6,33 -30,30
+                            -6,27 -10,20 -3,24"
+                            transform="scale(0.2) translate(0,-30)"
+                        />
+                    </g>
+                </defs>
+            </svg>
+        </div>
+        <div class="foreground">
+            <div class="vertical-centre">
+                <div class="black-hole">
+                    <div class="content">
+                        <div class="alink">
+                            <a href="https://analysis.null.place">analysis (blog)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script>
-// this 200.html page catches everything except https://null.place/ and
-// https://null.place/index.html, so if we landed here just redirect back ...
-window.location.replace('https://null.place/');
+var pageWidth = (
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+);
+var pageHeight = (
+    window.innerHeight ||
+    document.documentElement.clientHeight ||
+    document.body.clientHeight
+);
+var svg = document.getElementsByTagName('svg')[0];
+var svgDefs = svg.getElementsByTagName('defs')[0];
+for (var i = 0; i < 1000; i++) {
+    add1Star();
+}
+function add1Star() {
+    var star = svgDefs.getElementsByClassName('star')[0].cloneNode(true);
+
+    // note: scale is always the same, regardless of screen size.
+    var scaleStar = Math.random();
+
+    var x = pageWidth * Math.random();
+    var y = pageHeight * Math.random();
+    star.setAttribute(
+        'transform',
+        'translate(' + x + ',' + y + ') scale(' + scaleStar + ')'
+    );
+    svg.appendChild(star);
+}
+if (window.addEventListener) {
+    window.addEventListener('load', addRemainingStars, false);
+} else if (window.attachEvent) { // ie
+    window.attachEvent('onload', addRemainingStars);
+} else {
+    window['onload'] = addRemainingStars;
+}
+var i = 0; // global
+var intervalId = null; // global
+var numRemaining = 4000; // add 4000 more stars
+var interval = 400; // ms
+var numPerInterval = 1; // 1 gives a nice twinkling effect
+var numIntervals = numRemaining / numPerInterval;
+function addRemainingStars() {
+    intervalId = setInterval(function() {
+        for (var j = 0; j < numPerInterval; j++) add1Star();
+        if (i++ > numIntervals) clearInterval(intervalId);
+    }, interval);
+}
+// register service worker so this page works offline
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+}
         </script>
     </body>
 </html>
-
